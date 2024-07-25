@@ -34,8 +34,9 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step step1(JobRepository repository, DataSourceTransactionManager transactionManager, ItemReader<Product> reader, ItemWriter<Product> writer, ItemProcessor<Product, Product> processor) {
-        return new StepBuilder("step1", repository).<Product, Product>chunk(100, transactionManager).
+    public Step step1(JobRepository repository, DataSourceTransactionManager transactionManager, ItemReader<Product> reader, ItemWriter<Product> writer,
+                      ItemProcessor<Product, Product> processor) {
+        return new StepBuilder("step1", repository).<Product, Product>chunk(20, transactionManager).
                 reader(reader).processor(processor).writer(writer).build();
 
     }
@@ -62,30 +63,7 @@ public class BatchConfig {
                 .beanMapperStrict(false).linesToSkip(1).build();
     }
 
-   /* @Bean
-    public FlatFileItemReader<Product> reader() {
-        FlatFileItemReader<Product> reader = new FlatFileItemReader<Product>();
-        reader.setResource(new ClassPathResource("data.csv"));
-        reader.setLinesToSkip(1);
-        reader.setName("data");
-        reader.setLineMapper(lineMapper());
-        return reader;
-    }
 
-    private LineMapper<Product> lineMapper() {
-        DefaultLineMapper<Product> mapper = new DefaultLineMapper<Product>();
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
-        tokenizer.setDelimiter(DELIMITER_COMMA);
-        tokenizer.setStrict(false);
-        tokenizer.setNames("productId", "title", "description", "price", "discount");
-        BeanWrapperFieldSetMapper<Product> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(Product.class);
-        mapper.setFieldSetMapper(fieldSetMapper);
-        mapper.setLineTokenizer(tokenizer);
-        return mapper;
-
-
-    }*/
 
     @Bean
     public Job job(JobRepository repository, Step step1, JobNotificationListener listener) {
