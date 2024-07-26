@@ -36,7 +36,7 @@ public class BatchConfig {
     @Bean
     public Step step1(JobRepository repository, DataSourceTransactionManager transactionManager, ItemReader<Product> reader, ItemWriter<Product> writer,
                       ItemProcessor<Product, Product> processor) {
-        return new StepBuilder("step1", repository).<Product, Product>chunk(20, transactionManager).
+        return new StepBuilder("step1", repository).<Product, Product>chunk(50, transactionManager).
                 reader(reader).processor(processor).writer(writer).build();
 
     }
